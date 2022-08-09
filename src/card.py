@@ -6,6 +6,7 @@ class CardKind:
     CUP = "Cup"
     STICK = "Stick"
     GOLD = "Gold"
+    ALL_KINDS = [SWORD, CUP, STICK, GOLD]
 
 
 @dataclass
