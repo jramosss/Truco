@@ -5,7 +5,7 @@ from itertools import chain, combinations
 
 def calculate_points(cards: list[Card]):
     figures = [10, 11, 12]
-    points_list = []
+    points_list: list[int] = []
     points = 0
     tuples = chain.from_iterable(combinations(cards, r) for r in range(1, len(cards) + 1))
     tuples_list = list(tuples)[3:6]
