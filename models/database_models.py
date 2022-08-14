@@ -1,11 +1,8 @@
-from __future__ import annotations
-
 from datetime import datetime, timezone
 
 import peewee as models
 from src.state import GameState as gs
 from src.state import RoomState as rs
-from typing_extensions import Self
 
 db = models.SqliteDatabase("db.sqlite3")
 
@@ -24,33 +21,33 @@ ROOM_STATES = (
     (rs.FINISHED, "Finished"),
 )
 
-class BaseModel(models.Model):
-    created_at: datetime = models.DateTimeField(default=datetime.now(tz=timezone.utc))
-
-    def get(self, *query, **filters) -> Self:
-        return models.Model().get(*query, **filters)
-    class Meta:
-        database = db
-
-class User(BaseModel):
+class DBUser(models.Model):
     username: str = models.CharField(max_length=20)
     password: str = models.CharField(max_length=20)
+    email: str = models.CharField(max_length=20)
+    validated: bool = models.BooleanField(default=False)
+    created_at: datetime = models.DateTimeField(default=datetime.now(tz=timezone.utc))
+
     class Meta:
         database = db
 
-class Room(BaseModel):
+class DBRoom(models.Model):
     name: str = models.CharField(max_length=20)
     max_players: int = models.IntegerField()
-    owner: User = models.ForeignKeyField(User, backref='rooms')
+    owner: DBUser = models.ForeignKeyField(DBUser, backref='rooms')
     status: str = models.CharField(max_length=20, choices=ROOM_STATES, default=rs.LOBBY)
-    users = models.ManyToManyField(User, backref='rooms')
+    users = models.ManyToManyField(DBUser, backref='rooms')
+    created_at: datetime = models.DateTimeField(default=datetime.now(tz=timezone.utc))
+
     class Meta:
         database = db
 
 
-class Game(BaseModel):
-    room: Room = models.ForeignKeyField(Room, backref='games')
+class DBGame(models.Model):
+    room: DBRoom = models.ForeignKeyField(DBRoom, backref='games')
     state: str = models.CharField(max_length=20, choices=GAME_STATES)
     turn: int = models.IntegerField(default=0)
+    created_at: datetime = models.DateTimeField(default=datetime.now(tz=timezone.utc))
+
     class Meta:
         database = db
