@@ -3,8 +3,12 @@ from datetime import datetime, timezone
 import peewee as models
 from src.state import GameState as gs
 from src.state import RoomState as rs
+from sys import argv
 
-db = models.SqliteDatabase("db.sqlite3")
+if 'test' in argv[0]:
+    db = models.SqliteDatabase("testing_db.sqlite3")
+else:
+    db = models.SqliteDatabase("db.sqlite3")
 
 
 GAME_STATES = (

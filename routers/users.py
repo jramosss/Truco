@@ -4,17 +4,17 @@ from models.database_models import DBUser, db
 from models.fastapi_models import User
 from models.request_models import LoginRequest
 
-router = APIRouter()
+router = APIRouter(prefix="/users")
 
 
-@router.post('/register')
+@router.post('/register', tags=["Users"])
 def register(user: User):
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
     user = DBUser.create(username=user.username, password=hashed_password, email=user.email)
-    return user
+    return {'status': 201, 'message': 'User created'}
 
 
-@router.post('/login')
+@router.post('/login', tags=["Users"])
 def login(request: LoginRequest):
     if not (request.email or request.username):
         return {'error': 'Username or email is required', 'status': 400}
@@ -30,7 +30,7 @@ def login(request: LoginRequest):
         return {'error': 'Wrong password', 'status': 401}
 
 
-@router.get('/users')
+@router.get('/users', tags=["Users"])
 def get_users():
     users = DBUser.select()
-    return {'users': list(users.execute(db))}
+    return {'users': list(users.execute(db)), 'status': 200}
