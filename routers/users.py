@@ -10,6 +10,8 @@ router = APIRouter(prefix="/users")
 @router.post('/register', tags=["Users"])
 def register(user: User):
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+    if DBUser.select().where(DBUser.username == user.username).exists():
+        return {"status": 400, "message": "Username already taken"}
     user = DBUser.create(username=user.username, password=hashed_password, email=user.email)
     return {'status': 201, 'message': 'User created'}
 
