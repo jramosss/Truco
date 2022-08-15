@@ -18,12 +18,9 @@ def register(user: User):
 
 @router.post('/login', tags=["Users"])
 def login(request: LoginRequest):
-    if not (request.email or request.username):
-        return {'error': 'Username or email is required', 'status': 400}
-    elif request.username:
-        user = DBUser.select().where(DBUser.username == request.username)
-    elif request.email:
-        user = DBUser.select().where(DBUser.email == request.email)
+    user = DBUser.select().where(DBUser.username == request.identifier)
+    if not user.exists():
+        user = DBUser.select().where(DBUser.email == request.identifier)
     if not user.exists():
         return {'error': 'User not found', 'status': 404}
     else:
@@ -34,7 +31,7 @@ def login(request: LoginRequest):
         return {'error': 'Wrong password', 'status': 401}
 
 
-@router.get('/users', tags=["Users"])
+@router.get('/users', tags=["Debug"])
 def get_users():
     users = DBUser.select()
     return {'users': list(users.execute(db)), 'status': 200}
