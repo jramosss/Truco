@@ -19,11 +19,13 @@ def login(request: LoginRequest):
     if not (request.email or request.username):
         return {'error': 'Username or email is required', 'status': 400}
     elif request.username:
-        user = DBUser.get(DBUser.username == request.username)
+        user = DBUser.select().where(DBUser.username == request.username)
     elif request.email:
-        user = DBUser.get(DBUser.email == request.email)
-    if not user:
+        user = DBUser.select().where(DBUser.email == request.email)
+    if not user.exists():
         return {'error': 'User not found', 'status': 404}
+    else:
+        user = list(user.execute())[0]
     if bcrypt.checkpw(request.password.encode('utf-8'), user.password.encode('utf-8')):
         return {'user': user, 'status': 200}
     else:
