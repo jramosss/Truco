@@ -1,4 +1,3 @@
-from pprint import pprint
 from src.card import Card
 from itertools import chain, combinations
 
@@ -23,5 +22,3 @@ def calculate_points(cards: list[Card]):
                 points = max(card1.value, card2.value)
         points_list.append(points)
     return max(points_list)
-
-
