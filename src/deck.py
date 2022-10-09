@@ -1,6 +1,7 @@
-from src.card import Card, CardKind
-from random import shuffle
 from itertools import chain
+from random import shuffle
+
+from src.card import Card, CardKind
 
 
 class Deck:
@@ -20,11 +21,8 @@ class Deck:
     def shuffle(self):
         shuffle(self.cards)
 
-    def __str__(self):
-        res = []
-        for card in self.cards:
-            res.append(str(card))
-        return '\n'.join(res)
-
     def take_three(self):
         return [self.cards.pop(idx) for idx in range(3)]
+
+    def __str__(self):
+        return '\n'.join([str(card) for card in self.cards])

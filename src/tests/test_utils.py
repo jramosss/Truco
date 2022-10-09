@@ -15,5 +15,4 @@ ck = CardKind()
     ([Card(1, ck.SWORD), Card(1, ck.STICK), Card(1, ck.CUP)], 1)
 ])
 def test_calculate_points(cards, expected):
-    points = calculate_points(cards)
-    assert points == expected
+    assert calculate_points(cards) == expected

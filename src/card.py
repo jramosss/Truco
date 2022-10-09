@@ -16,9 +16,6 @@ class Card:
     value: int
     kind: str
 
-    def __str__(self):
-        return f"{self.value} of {self.kind}"
-
     def __get_hierarchy_table(self):
         ck = CardKind()
         hierarchy = {
@@ -31,12 +28,11 @@ class Card:
             (7, ck.CUP): 4,
             (7, ck.STICK): 4,
         }
-        other_values = {
+        hierarchy.update({
             (card, kind): value
             for card, value in zip([3, 2, 12, 11, 10, 6, 5, 4], range(10, 1, -1))
             for kind in ck.ALL_KINDS
-        }
-        hierarchy.update(other_values)
+        })
         return hierarchy
 
     def get_hierarchy(self):
@@ -48,3 +44,6 @@ class Card:
 
     def __gt__(self, other):
         return self.get_hierarchy() > other.get_hierarchy()
+
+    def __str__(self):
+        return f"{self.value} of {self.kind}"

@@ -1,5 +1,6 @@
-from src.card import Card
 from itertools import chain, combinations
+
+from src.card import Card
 
 
 def calculate_points(cards: list[Card]):
